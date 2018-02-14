@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Your Appointments</title>
+    <script src="http://code.jquery.com/jquery-1.12.4.js"
+            integrity="sha256-Qw82+bXyGq6MydymqBxNPYTaUXXq7c8v3CwiYwLLNXU="
+            crossorigin="anonymous"></script>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+          crossorigin="anonymous">
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
+</head>
+<body>
+<div id="angularDiv" class="container" ng-controller="AppointmentController as appt">
+    <h3>Appointments</h3>
+    <form action="/addAppointment" id="newAppointment" method="post">
+        <div class="row">
+            <div class="col-sm-2">
+                <input type="button"
+                       ng-click="appt.makingAppointment=true"
+                       ng-show="!appt.makingAppointment"
+                       value="New">
+                <input type="submit" value="Add" ng-click="appt.makingAppointment=false" name="addAppointment"
+                       class="ng-hide"
+                       ng-show="appt.makingAppointment">
+            </div>
+            <div class="col-sm-2" ng-show="appt.makingAppointment">
+                <input type="button" value="Cancel" ng-click="appt.makingAppointment=false" name="cancelAppointment">
+            </div>
+        </div>
+        <div class="ng-hide" ng-show="appt.makingAppointment">
+            <div class="row">
+                <div class="col-sm-4"><label>Date <input type="date" name="date"></label></div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4"><label>Time <input type="time" name="time"></label></div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12"><label>Desc <textarea name="description" placeholder=""></textarea></label></div>
+            </div>
+        </div>
+    </form>
+    <div class="row">
+        <div class="col-sm-3"><input type="text" id="searchFor" ng-model="appt.searchQuery" placeholder="Enter query..."></div>
+        <div class="col-sm-2"><input type="button"
+                                     id="startSearch"
+                                     ng-click="appt.getAppointments()"
+                                     value="Search"></div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <table class="table table-bordered table-condensed table-striped">
+                <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Description</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="appointment in appt.appointments">
+                    <td>{( appointment.date )}</td>
+                    <td>{( appointment.time )}</td>
+                    <td>{( appointment.description )}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.9/angular.js"
+            integrity="sha256-ubLEQwr53FjvE/hMBvPTVinRBPUWl9FWKn2MW59CiM4="
+            crossorigin="anonymous"></script>
+    <script src="/static/js/AppointmentController.js"></script>
+    <script>
+        let app = angular.module('AppointmentModule', [])
+            .config(function($interpolateProvider){
+                $interpolateProvider.startSymbol('{(').endSymbol(')}');
+            })
+            .controller('AppointmentController', AppointmentController);
+        angular.element(document).ready(function () {
+	        angular.bootstrap(document.getElementById('angularDiv'),['AppointmentModule']);
+        });
+    </script>
+</div>
+</body>
+</html>
